@@ -4,7 +4,7 @@
 
 export const STORE_CONFIG = {
   name: 'Lashker Traders',
-  tagline: 'Your Trusted Diaper Shopping Partner in Bangladesh',
+  tagline: 'Diapers • Baby Care • More',
   whatsappNumber: '01797753722',
   whatsappIntl: '+8801797753722',
   whatsappCleanNumber: '8801797753722',

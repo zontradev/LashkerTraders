@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Star, Check } from 'lucide-react';
+import { ShoppingBag, Star, Heart, Check } from 'lucide-react';
 import type { Product, ProductVariant } from '@/lib/services/store-data';
 import { Link } from '@/router';
 import { useCart } from '@/lib/context/cart-context';
+import { useWishlist } from '@/lib/context/wishlist-context';
 import { useTranslation } from '@/i18n';
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
-  const { formatPrice, t, language } = useTranslation();
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { formatPrice, language } = useTranslation();
+  const [selectedVariant] = useState<ProductVariant>(
     product.variants[0] || null
   );
   const [added, setAdded] = useState(false);
+
+  const isFavorited = isInWishlist(product.id);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,143 +27,139 @@ export function ProductCard({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product.id);
+  };
+
   const isOutOfStock = !selectedVariant || selectedVariant.stockQuantity <= 0;
 
+  // Badge styling matching the reference screenshot
+  const renderBadge = () => {
+    if (product.badge === 'Best Seller') {
+      return (
+        <span className="bg-[#00b050] text-white text-[10px] font-semibold px-2 py-0.5 rounded-sm shadow-2xs">
+          Best Seller
+        </span>
+      );
+    }
+    if (product.badge === 'Popular') {
+      return (
+        <span className="bg-[#00b050] text-white text-[10px] font-semibold px-2 py-0.5 rounded-sm shadow-2xs">
+          Popular
+        </span>
+      );
+    }
+    if (product.badge === 'On Sale') {
+      return (
+        <span className="bg-[#ef4444] text-white text-[10px] font-semibold px-2 py-0.5 rounded-sm shadow-2xs">
+          On Sale
+        </span>
+      );
+    }
+    if (product.badge === 'New') {
+      return (
+        <span className="bg-[#009688] text-white text-[10px] font-semibold px-2 py-0.5 rounded-sm shadow-2xs">
+          New
+        </span>
+      );
+    }
+    return <span className="h-4" />;
+  };
+
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/80 overflow-hidden hover:border-slate-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+    <div className="group bg-white rounded-2xl border border-slate-200/80 p-3 hover:border-slate-300 hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative">
       <div>
-        {/* Image Container with Badges */}
+        {/* Top Badges & Wishlist row */}
+        <div className="flex items-center justify-between mb-1 min-h-[22px]">
+          <div>{renderBadge()}</div>
+          <button
+            type="button"
+            onClick={handleWishlistClick}
+            className="p-1 rounded-full text-slate-300 hover:text-rose-500 transition-colors cursor-pointer"
+            aria-label={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
+            title={isFavorited ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart
+              className={`w-4 h-4 transition-transform active:scale-125 ${
+                isFavorited
+                  ? 'text-rose-500 fill-rose-500'
+                  : 'text-slate-300 hover:text-rose-400'
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Product Image */}
         <Link
           to={`/product/${product.slug}`}
-          className="relative block aspect-square bg-slate-50 overflow-hidden"
+          className="block aspect-square w-full overflow-hidden bg-slate-50/50 rounded-xl my-1 relative group"
         >
           <img
             src={product.mainImage}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />
-
-          {/* Badges */}
-          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
-            {product.isFeatured && (
-              <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
-                Popular
-              </span>
-            )}
-            {selectedVariant?.regularPrice && selectedVariant.regularPrice > selectedVariant.price && (
-              <span className="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
-                Save {formatPrice(selectedVariant.regularPrice - selectedVariant.price)}
-              </span>
-            )}
-          </div>
-
-          <div className="absolute top-2.5 right-2.5">
-            <span className="bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-semibold px-2 py-0.5 rounded-md">
-              {product.brand}
-            </span>
-          </div>
         </Link>
 
-        {/* Content */}
-        <div className="p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <span className="font-medium text-sky-700">{product.category}</span>
-            <div className="flex items-center gap-1 text-amber-500 font-semibold">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{product.averageRating.toFixed(1)}</span>
-              <span className="text-slate-400 font-normal">({product.reviewCount})</span>
-            </div>
-          </div>
+        {/* Title */}
+        <Link to={`/product/${product.slug}`} className="block mt-2">
+          <h3 className="font-semibold text-slate-900 text-xs sm:text-sm hover:text-[#00b050] transition-colors line-clamp-1" title={product.name}>
+            {product.name}
+          </h3>
+        </Link>
 
-          <Link to={`/product/${product.slug}`}>
-            <h3 className="font-bold text-slate-900 text-sm hover:text-sky-600 transition-colors line-clamp-2">
-              {product.name}
-            </h3>
-          </Link>
-
-          {/* Size Pills */}
-          <div className="pt-1">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[11px] text-slate-400 font-medium mr-1">{t.catalog.selectSize}</span>
-              {product.variants.map((v) => {
-                const isSelected = v.id === selectedVariant?.id;
-                return (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedVariant(v);
-                    }}
-                    className={`text-[10px] font-bold px-2 py-1 rounded-md border transition-all cursor-pointer ${
-                      isSelected
-                        ? 'border-sky-600 bg-sky-50 text-sky-700 ring-1 ring-sky-600'
-                        : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300'
-                    }`}
-                  >
-                    {v.size}
-                  </button>
-                );
-              })}
-            </div>
-            {selectedVariant && (
-              <p className="text-[11px] text-slate-400 mt-1">
-                Size {selectedVariant.size} • {selectedVariant.packCount} {t.catalog.pcsPerPack}
-              </p>
-            )}
+        {/* Ratings & Reviews */}
+        <div className="flex items-center gap-1.5 mt-1 text-[11px]">
+          <div className="flex items-center text-[#f59e0b]">
+            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+            <Star className="w-3 h-3 text-slate-300" />
           </div>
+          <span className="font-semibold text-slate-700">{product.averageRating.toFixed(1)}</span>
+          <span className="text-slate-400">({product.reviewCount})</span>
         </div>
       </div>
 
-      {/* Footer Price & Add */}
-      <div className="p-4 pt-0 border-t border-slate-100 mt-3 flex items-center justify-between">
+      {/* Pricing & Add to Cart button */}
+      <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
         <div>
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-extrabold text-slate-900">
-              {selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(product.basePrice)}
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span className="text-sm sm:text-base font-bold text-slate-900">
+              ৳ {selectedVariant ? selectedVariant.price.toLocaleString() : product.basePrice.toLocaleString()}
             </span>
             {selectedVariant?.regularPrice && selectedVariant.regularPrice > selectedVariant.price && (
-              <span className="text-xs text-slate-400 line-through">
-                {formatPrice(selectedVariant.regularPrice)}
-              </span>
+              <>
+                <span className="text-xs text-slate-400 line-through">
+                  ৳ {selectedVariant.regularPrice.toLocaleString()}
+                </span>
+                <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1 py-0.5 rounded">
+                  -{Math.round(((selectedVariant.regularPrice - selectedVariant.price) / selectedVariant.regularPrice) * 100)}%
+                </span>
+              </>
             )}
           </div>
-          <p className="text-[10px] text-slate-500 font-medium">
-            {isOutOfStock ? (
-              <span className="text-rose-600 font-semibold">{t.catalog.outOfStock}</span>
-            ) : selectedVariant && selectedVariant.stockQuantity <= 15 ? (
-              <span className="text-amber-600 font-semibold">{t.catalog.lowStock} ({selectedVariant.stockQuantity})</span>
-            ) : (
-              <span className="text-emerald-600 font-semibold">{t.catalog.inStock}</span>
-            )}
-          </p>
         </div>
 
         <button
           type="button"
           onClick={handleQuickAdd}
           disabled={isOutOfStock}
-          className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-xs shrink-0 ${
             isOutOfStock
-              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
               : added
-              ? 'bg-emerald-600 text-white'
-              : 'bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white shadow-xs'
+              ? 'bg-emerald-600 text-white scale-110'
+              : 'bg-[#00b050] hover:bg-[#009643] text-white hover:scale-105 active:scale-95'
           }`}
           aria-label="Add to cart"
+          title={isOutOfStock ? 'Out of stock' : 'Add to cart'}
         >
-          {added ? (
-            <>
-              <Check className="w-3.5 h-3.5" />
-              <span>Added</span>
-            </>
-          ) : (
-            <>
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>{t.catalog.addToCart}</span>
-            </>
-          )}
+          {added ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
         </button>
       </div>
     </div>

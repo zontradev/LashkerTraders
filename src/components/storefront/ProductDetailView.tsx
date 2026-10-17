@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShoppingBag,
   Zap,
@@ -11,8 +11,15 @@ import {
   Minus,
   Check,
   Store,
+  BadgeCheck,
 } from 'lucide-react';
-import type { Product, ProductVariant } from '@/lib/services/store-data';
+import {
+  isCurrentUserB2BGranted,
+  getCurrentUserB2BMembership,
+  type Product,
+  type ProductVariant,
+  type B2BMembershipRecord,
+} from '@/lib/services/store-data';
 import { VariantSelector } from './VariantSelector';
 import { generateWhatsAppOrderMessage, getWhatsAppOrderUrl, STORE_CONFIG } from '@/lib/constants';
 import { useCart } from '@/lib/context/cart-context';
@@ -31,6 +38,19 @@ export function ProductDetailView({ product }: { product: Product }) {
   );
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [isB2BGranted, setIsB2BGranted] = useState(false);
+  const [b2bMember, setB2bMember] = useState<B2BMembershipRecord | null>(null);
+
+  useEffect(() => {
+    const granted = isCurrentUserB2BGranted();
+    const mem = getCurrentUserB2BMembership();
+    setIsB2BGranted(granted);
+    setB2bMember(mem);
+    if (granted && selectedVariant) {
+      const moq = selectedVariant.wholesaleMoq || 20;
+      setQuantity(moq);
+    }
+  }, [selectedVariant]);
 
   // Review submission state
   const [reviewName, setReviewName] = useState('');
@@ -168,19 +188,48 @@ export function ProductDetailView({ product }: { product: Product }) {
           </div>
 
           {/* Pricing Row */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-baseline gap-3">
-            <span className="text-3xl font-extrabold text-slate-900">
-              {selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(product.basePrice)}
-            </span>
-            {selectedVariant?.regularPrice &&
-              selectedVariant.regularPrice > selectedVariant.price && (
-                <span className="text-sm text-slate-400 line-through">
-                  {formatPrice(selectedVariant.regularPrice)}
-                </span>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+            <div className="flex flex-wrap items-baseline gap-3">
+              {isB2BGranted && selectedVariant ? (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold text-amber-950">
+                      {formatPrice(selectedVariant.wholesalePrice || Math.round(selectedVariant.price * 0.85))}
+                    </span>
+                    <span className="text-sm text-slate-400 line-through">
+                      MRP {formatPrice(selectedVariant.price)}
+                    </span>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500 text-white shadow-xs">
+                    Wholesale Price
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                    MOQ: {selectedVariant.wholesaleMoq || 20} pcs
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="text-3xl font-extrabold text-slate-900">
+                    {selectedVariant ? formatPrice(selectedVariant.price) : formatPrice(product.basePrice)}
+                  </span>
+                  {selectedVariant?.regularPrice &&
+                    selectedVariant.regularPrice > selectedVariant.price && (
+                      <span className="text-sm text-slate-400 line-through">
+                        {formatPrice(selectedVariant.regularPrice)}
+                      </span>
+                    )}
+                </>
               )}
-            <span className="text-xs text-slate-500 font-medium ml-auto">
-              {selectedVariant?.packCount} {t.catalog.pcsPerPack}
-            </span>
+              <span className="text-xs text-slate-500 font-medium ml-auto">
+                {selectedVariant?.packCount} {t.catalog.pcsPerPack}
+              </span>
+            </div>
+
+            {isB2BGranted && b2bMember && (
+              <p className="text-[11px] text-amber-800 font-medium">
+                ★ Wholesale Member Tier: <strong>{b2bMember.priceGroupName}</strong>. Wholesale rate applied when ordering {selectedVariant?.wholesaleMoq || 20}+ packs.
+              </p>
+            )}
           </div>
 
           {/* Sizing & Variant Selection */}
@@ -221,23 +270,36 @@ export function ProductDetailView({ product }: { product: Product }) {
             </div>
           </div>
 
-          {/* B2B Wholesale Notice */}
-          <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-start gap-2.5">
-            <Store className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-xs">
-              <span className="font-bold text-amber-900">
-                {language === 'bn' ? 'ফার্মেসি ও পাইকারি কার্টুন রেট:' : 'Wholesale Carton Pricing:'}
-              </span>
-              <p className="text-amber-800 mt-0.5">
-                {language === 'bn' 
-                  ? '৫+ প্যাকে ৮% এবং ২০+ প্যাকে ১৪% পাইকারি কমিশন রেট। ' 
-                  : '5+ packs: 8% off, 20+ packs: 14% off wholesale tier pricing. '}
-                <Link to="/b2b" className="font-bold underline text-amber-950">
-                  {language === 'bn' ? 'পাইকারি পোর্টাল দেখুন' : 'View B2B Portal'}
-                </Link>
-              </p>
+          {/* B2B Notice */}
+          {isB2BGranted ? (
+            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-start gap-2.5">
+              <BadgeCheck className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className="font-bold text-amber-900">
+                  Partner Wholesale Privileges Active
+                </span>
+                <p className="text-amber-800 mt-0.5">
+                  Carton orders will be fulfilled with priority courier dispatch directly from the central distribution center.
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start gap-2.5">
+              <Store className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+              <div className="text-xs">
+                <span className="font-bold text-slate-900">
+                  Commercial & Pharmacy Inquiries:
+                </span>
+                <p className="text-slate-600 mt-0.5">
+                  Registered baby shops and pharmacies may{' '}
+                  <Link to="/account" className="font-bold underline text-sky-700">
+                    apply for wholesale access
+                  </Link>{' '}
+                  to view verified distribution pricing.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Quantity Selector & Action Buttons */}
           <div className="space-y-3 pt-2">
@@ -245,8 +307,11 @@ export function ProductDetailView({ product }: { product: Product }) {
               <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50 p-1">
                 <button
                   type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1 || isOutOfStock}
+                  onClick={() => {
+                    const minQty = isB2BGranted ? (selectedVariant?.wholesaleMoq || 20) : 1;
+                    setQuantity(Math.max(minQty, quantity - 1));
+                  }}
+                  disabled={quantity <= (isB2BGranted ? (selectedVariant?.wholesaleMoq || 20) : 1) || isOutOfStock}
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors disabled:opacity-30 cursor-pointer"
                 >
                   <Minus className="w-4 h-4" />

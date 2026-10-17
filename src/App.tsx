@@ -13,7 +13,6 @@ import { CheckoutView } from '@/views/CheckoutView';
 import { TrackOrderView } from '@/views/TrackOrderView';
 import { B2BWholesaleView } from '@/views/B2BWholesaleView';
 import { AccountView } from '@/views/AccountView';
-import { AdminView } from '@/views/AdminView';
 import {
   AboutView,
   ContactView,
@@ -39,13 +38,26 @@ export function AppContent() {
     if (normalized === '/track-order') return <TrackOrderView />;
     if (normalized === '/b2b') return <B2BWholesaleView />;
     if (normalized === '/account') return <AccountView />;
-    if (normalized.startsWith('/admin')) return <AdminView />;
     if (normalized === '/about') return <AboutView />;
     if (normalized === '/contact') return <ContactView />;
     if (normalized === '/shipping-policy') return <ShippingPolicyView />;
     if (normalized === '/return-policy') return <ReturnPolicyView />;
     if (normalized === '/privacy-policy') return <PrivacyPolicyView />;
     if (normalized === '/terms') return <TermsView />;
+    if (normalized === '/admin' || normalized === '/client' || normalized === '/management' || normalized === '/client-server') {
+      if (typeof window !== 'undefined') {
+        window.location.href = 'http://localhost:3001';
+      }
+      return (
+        <div style={{ padding: '60px 20px', textAlign: 'center', minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>Opening Lashker Traders Client Server...</h2>
+          <p style={{ color: '#64748b', marginBottom: '20px' }}>Connecting to Executive Management Console on port 3001</p>
+          <a href="http://localhost:3001" style={{ padding: '10px 20px', background: '#0284c7', color: 'white', borderRadius: '8px', textDecoration: 'none', fontWeight: 600 }}>
+            Click here to open Client Server (:3001)
+          </a>
+        </div>
+      );
+    }
 
     // Fallback to Home
     return <HomeView />;

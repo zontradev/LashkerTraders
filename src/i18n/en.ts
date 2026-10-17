@@ -8,10 +8,9 @@ export const en = {
     b2bWholesale: 'B2B Wholesale',
     trackOrder: 'Track Order',
     account: 'Account',
-    admin: 'Admin Console',
     cart: 'Cart',
     callUs: 'Hotline / WhatsApp',
-    tagline: 'Your Trusted Diaper Shopping Partner in Bangladesh',
+    tagline: 'Diapers • Baby Care • More',
   },
 
   // Hero Section

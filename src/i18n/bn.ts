@@ -10,10 +10,9 @@ export const bn: Translations = {
     b2bWholesale: 'পাইকারি / বি২বি',
     trackOrder: 'অর্ডার ট্র্যাক',
     account: 'মাই একাউন্ট',
-    admin: 'অ্যাডমিন প্যানেল',
     cart: 'ব্যাগ',
     callUs: 'হটলাইন / হোয়াটসঅ্যাপ',
-    tagline: 'বাংলাদেশে আপনার বিশ্বস্ত ডায়াপার শপিং পার্টনার',
+    tagline: 'ডায়াপার • বেবি কেয়ার • অন্যান্য',
   },
 
   // Hero Section

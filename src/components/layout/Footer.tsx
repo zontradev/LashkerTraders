@@ -1,143 +1,210 @@
-import React from 'react';
-import { Phone, MessageCircle, Mail, MapPin, ShieldCheck, HeartHandshake, Truck, Store } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  Facebook,
+  Instagram,
+  Youtube,
+  MessageCircle,
+  Mail,
+  Phone,
+  MapPin,
+  Check,
+} from 'lucide-react';
 import { Link } from '@/router';
-import { STORE_CONFIG } from '@/lib/constants';
-import { useTranslation } from '@/i18n';
+import { BabyLogo } from '@/components/common/BabyLogo';
 
 export function Footer() {
-  const { t, language } = useTranslation();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setTimeout(() => setSubscribed(false), 3000);
+      setEmail('');
+    }
+  };
 
   return (
-    <footer className="bg-slate-900 text-slate-400 text-sm mt-16 border-t border-slate-800">
-      {/* Trust banner */}
-      <div className="border-b border-slate-800 py-8 px-4">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-sky-950/60 border border-sky-800/50 flex items-center justify-center text-sky-400 shrink-0">
-              <Truck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-white font-semibold text-sm">
-                {language === 'bn' ? 'সারাদেশে দ্রুত হোম ডেলিভারি' : 'Nationwide Fast Delivery'}
-              </h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {language === 'bn' ? 'ঢাকা সিটিতে মাত্র ৬০ টাকা, পার্শ্ববর্তী ৮০ টাকা, সারাদেশে ১২০ টাকা' : 'Inside Dhaka ৳60, Suburban ৳80, Outside Dhaka ৳120'}
-              </p>
+    <footer className="bg-white border-t border-slate-200/80 pt-12 pb-8 text-slate-600 text-xs sm:text-sm">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Main 5-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-10 border-b border-slate-100">
+          {/* Column 1: Brand Info */}
+          <div className="lg:col-span-4 space-y-4">
+            <Link to="/" className="inline-block">
+              <BabyLogo size="md" showTagline={true} />
+            </Link>
+            <p className="text-xs text-slate-500 leading-relaxed max-w-sm">
+              Your trusted partner for quality baby care products in Bangladesh.
+            </p>
+
+            {/* Social Icons matching screenshot */}
+            <div className="flex items-center gap-2 pt-1">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#00b050] hover:text-white text-slate-600 flex items-center justify-center transition-colors shadow-2xs"
+                aria-label="Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#00b050] hover:text-white text-slate-600 flex items-center justify-center transition-colors shadow-2xs"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#00b050] hover:text-white text-slate-600 flex items-center justify-center transition-colors shadow-2xs"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-4 h-4" />
+              </a>
+              <a
+                href="https://wa.me/8801797753722"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-[#00b050] hover:text-white text-slate-600 flex items-center justify-center transition-colors shadow-2xs"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400 shrink-0">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-white font-semibold text-sm">
-                {language === 'bn' ? '১০০% আসল ও সিলগালা স্টক' : '100% Authentic Stock'}
-              </h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {language === 'bn' ? 'সরাসরি অফিসিয়াল সোর্স থেকে সংগৃহীত ফ্রেশ মেয়াদের ডায়াপার' : 'Direct source authentic diaper brands with fresh expiry'}
-              </p>
-            </div>
+          {/* Column 2: Quick Links */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Quick Links</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
+              <li>
+                <Link to="/" className="hover:text-[#00b050] transition-colors">
+                  › Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/shop" className="hover:text-[#00b050] transition-colors">
+                  › All Products
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-[#00b050] transition-colors">
+                  › About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-[#00b050] transition-colors">
+                  › Contact Us
+                </Link>
+              </li>
+            </ul>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400 shrink-0">
-              <HeartHandshake className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="text-white font-semibold text-sm">
-                {language === 'bn' ? 'ক্যাশ অন ডেলিভারি ও পাইকারি' : 'Cash on Delivery & B2B Wholesale'}
-              </h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                {language === 'bn' ? 'পণ্য হাতে পেয়ে টাকা পরিশোধ করুন। ফার্মেসির জন্য কার্টুন রেট।' : 'Pay on delivery. Carton wholesale rates for pharmacies.'}
-              </p>
-            </div>
+          {/* Column 3: Customer Service */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Customer Service</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
+              <li>
+                <Link to="/shipping-policy" className="hover:text-[#00b050] transition-colors">
+                  › Delivery Information
+                </Link>
+              </li>
+              <li>
+                <Link to="/return-policy" className="hover:text-[#00b050] transition-colors">
+                  › Return & Refund Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/terms" className="hover:text-[#00b050] transition-colors">
+                  › Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="hover:text-[#00b050] transition-colors">
+                  › Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-[#00b050] transition-colors">
+                  › FAQs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: My Account */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-bold text-slate-900 text-xs sm:text-sm">My Account</h4>
+            <ul className="space-y-2 text-xs text-slate-500">
+              <li>
+                <Link to="/account" className="hover:text-[#00b050] transition-colors">
+                  › Login / Sign Up
+                </Link>
+              </li>
+              <li>
+                <Link to="/track-order" className="hover:text-[#00b050] transition-colors">
+                  › Track Order
+                </Link>
+              </li>
+              <li>
+                <Link to="/account" className="hover:text-[#00b050] transition-colors">
+                  › My Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/account" className="hover:text-[#00b050] transition-colors">
+                  › Wishlist
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 5: Subscribe to Our Newsletter */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-bold text-slate-900 text-xs sm:text-sm">Subscribe to Our Newsletter</h4>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Get the latest updates on new products and special offers.
+            </p>
+            <form onSubmit={handleSubscribe} className="space-y-2">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:border-[#00b050] outline-hidden transition-all"
+              />
+              <button
+                type="submit"
+                className="w-full bg-[#00b050] hover:bg-[#009643] text-white font-bold text-xs py-2 px-4 rounded-lg transition-colors shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                {subscribed ? (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Subscribed!</span>
+                  </>
+                ) : (
+                  <span>Subscribe</span>
+                )}
+              </button>
+            </form>
           </div>
         </div>
-      </div>
 
-      {/* Main footer links */}
-      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
-        {/* Brand info */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold">
-              LT
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">
-              Lashker <span className="text-sky-400">Traders</span>
-            </span>
-          </div>
-          <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-            {t.footer.about}
-          </p>
-          <div className="space-y-1.5 text-xs">
-            <div className="flex items-center gap-2 text-slate-300">
-              <Phone className="w-4 h-4 text-sky-400 shrink-0" />
-              <span>{language === 'bn' ? 'হটলাইন' : 'Helpline'}: {STORE_CONFIG.phone}</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>WhatsApp: {STORE_CONFIG.whatsappNumber}</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <Mail className="w-4 h-4 text-sky-400 shrink-0" />
-              <span>{STORE_CONFIG.email}</span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-300">
-              <MapPin className="w-4 h-4 text-sky-400 shrink-0" />
-              <span>{STORE_CONFIG.address}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="space-y-3">
-          <h4 className="text-white font-semibold text-xs uppercase tracking-wider">{t.footer.quickLinks}</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link to="/shop" className="hover:text-white transition-colors">{t.nav.shop}</Link></li>
-            <li><Link to="/b2b" className="hover:text-amber-400 text-amber-300 transition-colors font-semibold flex items-center gap-1"><Store className="w-3 h-3" /> {t.nav.b2bWholesale}</Link></li>
-            <li><Link to="/category/diaper-pants" className="hover:text-white transition-colors">{language === 'bn' ? 'ডায়াপার প্যান্টস (পুল-আপ)' : 'Diaper Pants'}</Link></li>
-            <li><Link to="/category/baby-diapers-belt" className="hover:text-white transition-colors">{language === 'bn' ? 'বেল্ট ডায়াপার (টেপ)' : 'Belt Diapers'}</Link></li>
-            <li><Link to="/category/baby-wipes-skincare" className="hover:text-white transition-colors">{language === 'bn' ? 'বেবি ওয়াইপস' : 'Baby Wipes'}</Link></li>
-          </ul>
-        </div>
-
-        {/* Popular Brands */}
-        <div className="space-y-3">
-          <h4 className="text-white font-semibold text-xs uppercase tracking-wider">{language === 'bn' ? 'শীর্ষ ব্র্যান্ড' : 'Top Brands'}</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link to="/shop?brand=twinkle" className="hover:text-white transition-colors">Twinkle Diaper</Link></li>
-            <li><Link to="/shop?brand=huggies" className="hover:text-white transition-colors">Huggies Wonder Pants</Link></li>
-            <li><Link to="/shop?brand=molfix" className="hover:text-white transition-colors">Molfix Air Dry</Link></li>
-            <li><Link to="/shop?brand=neocare" className="hover:text-white transition-colors">NeoCare (ACI)</Link></li>
-            <li><Link to="/shop?brand=pampers" className="hover:text-white transition-colors">Pampers Active Baby</Link></li>
-          </ul>
-        </div>
-
-        {/* Customer Care & Policies */}
-        <div className="space-y-3">
-          <h4 className="text-white font-semibold text-xs uppercase tracking-wider">{t.footer.policies}</h4>
-          <ul className="space-y-2 text-xs">
-            <li><Link to="/track-order" className="hover:text-white transition-colors">{t.nav.trackOrder}</Link></li>
-            <li><Link to="/shipping-policy" className="hover:text-white transition-colors">{language === 'bn' ? 'শিপিং পলিসি' : 'Shipping Policy'}</Link></li>
-            <li><Link to="/return-policy" className="hover:text-white transition-colors">{language === 'bn' ? 'রিটার্ন ও রিফান্ড পলিসি' : 'Return Policy'}</Link></li>
-            <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{language === 'bn' ? 'প্রাইভেসি পলিসি' : 'Privacy Policy'}</Link></li>
-            <li><Link to="/terms" className="hover:text-white transition-colors">{language === 'bn' ? 'শর্তাবলী' : 'Terms & Conditions'}</Link></li>
-            <li><Link to="/about" className="hover:text-white transition-colors">{language === 'bn' ? 'আমাদের সম্পর্কে' : 'About Us'}</Link></li>
-            <li><Link to="/contact" className="hover:text-white transition-colors">{language === 'bn' ? 'যোগাযোগ' : 'Contact Us'}</Link></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* Bottom copyright & payment icons */}
-      <div className="border-t border-slate-800 py-6 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} {STORE_CONFIG.name}. {t.footer.allRightsReserved}</p>
-          <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium">Cash On Delivery</span>
-            <span className="px-2 py-0.5 rounded bg-pink-950 text-pink-300 font-medium">bKash</span>
-            <span className="px-2 py-0.5 rounded bg-orange-950 text-orange-300 font-medium">Nagad</span>
+        {/* Bottom copyright line matching screenshot */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <p>© 2025 Lashker Traders. All rights reserved.</p>
+          <div className="flex items-center gap-4 text-slate-500 font-medium">
+            <span>Dhaka, Bangladesh</span>
+            <span>•</span>
+            <span>Hotline: 01797753722</span>
           </div>
         </div>
       </div>
