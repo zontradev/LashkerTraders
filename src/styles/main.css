@@ -1,0 +1,350 @@
+@import './variables.css';
+
+/* ==============================================================================
+   Lashker Traders — Main Modular Stylesheet
+   Core Layout, UI Components, Micro-Animations & Responsive Utilities
+   ============================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--color-navy-900);
+  background-color: #f8fafc;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-navy-900);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+}
+
+/* Container */
+.container-lashker {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-lashker {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-lashker {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+/* Premium Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-primary-600);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+  transition: all var(--transition-normal);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-700);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-navy-800);
+  background-color: #ffffff;
+  border: 1px solid var(--color-navy-200);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-navy-50);
+  border-color: var(--color-navy-300);
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-emerald-600);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  transition: all var(--transition-normal);
+}
+
+.btn-whatsapp:hover {
+  background-color: var(--color-emerald-700);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Diaper Card */
+.card-diaper {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 1.25rem;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.card-diaper:hover {
+  border-color: var(--color-primary-300);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Size Pills */
+.size-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-navy-200);
+  background: #ffffff;
+  color: var(--color-navy-700);
+  transition: all var(--transition-fast);
+}
+
+.size-pill:hover {
+  border-color: var(--color-primary-400);
+  color: var(--color-primary-700);
+  background: var(--color-primary-50);
+}
+
+.size-pill.active {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.3);
+}
+
+.size-pill.out-of-stock {
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  background: var(--color-navy-100);
+  border-color: var(--color-navy-200);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDrawerRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(2, 132, 199, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+.animate-drawer {
+  animation: slideDrawerRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom restrained scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Focus outlines for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-primary-600);
+  outline-offset: 2px;
+}
+
+/* ==============================================================================
+   All-Device Responsive System (Phones 320px to 4K TVs 1920px+)
+   ============================================================================== */
+
+/* Safe area insets for modern mobile notched displays */
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Touch-friendly hit target helper (Min 44x44px for WCAG 2.2 AAA accessibility) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 1. Small Phones (320px – 374px) */
+@media (max-width: 374px) {
+  .card-diaper {
+    padding: 0.875rem;
+  }
+  .size-pill {
+    padding: 0.25rem 0.45rem;
+    font-size: 0.7rem;
+  }
+  h1 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* 2. Standard Phones (375px – 479px) */
+@media (min-width: 375px) and (max-width: 479px) {
+  .card-diaper {
+    padding: 1rem;
+  }
+}
+
+/* 3. Large Phones (480px – 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .product-grid-responsive {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 4. Tablets (768px – 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .product-grid-responsive {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* 5. Laptops (1024px – 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .product-grid-responsive {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* 6. Desktop Monitors (1440px – 1919px) */
+@media (min-width: 1440px) {
+  .max-w-7xl {
+    max-width: 88rem; /* 1408px comfortable width */
+  }
+}
+
+/* 7. Large Monitors & TVs (1920px and above) */
+@media (min-width: 1920px) {
+  .max-w-7xl {
+    max-width: 100rem; /* 1600px centered canvas preventing excessive stretched lines */
+  }
+  body {
+    font-size: 1rem;
+  }
+}
+
+/* Motion Sensitivity */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

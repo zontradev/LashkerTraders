@@ -1,0 +1,66 @@
+@import './variables.css';
+
+/* ==============================================================================
+   Lashker Traders — B2B Wholesale Portal Stylesheet
+   Pharmacy & Retailer Bulk Orders, Tier Pricing & Margin Calculator
+   ============================================================================== */
+
+.b2b-hero {
+  background: linear-gradient(135deg, var(--color-navy-950) 0%, var(--color-navy-900) 60%, var(--color-primary-900) 100%);
+  color: #ffffff;
+  padding: 4rem 1rem;
+  border-bottom: 1px solid var(--color-navy-800);
+}
+
+.b2b-tier-card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-navy-200);
+  padding: 1.75rem;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.b2b-tier-card:hover {
+  border-color: var(--color-primary-600);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+.b2b-tier-card.featured {
+  border-color: var(--color-primary-600);
+  background: linear-gradient(180deg, #ffffff 0%, var(--color-primary-50) 100%);
+  box-shadow: var(--shadow-md);
+}
+
+.b2b-calculator-box {
+  background: #ffffff;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-navy-200);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+.b2b-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--color-amber-500);
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.margin-highlight {
+  background: var(--color-emerald-50);
+  border: 1px dashed var(--color-emerald-500);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  text-align: center;
+}
